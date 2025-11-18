@@ -43,7 +43,23 @@ fn main() {
 
         if input.starts_with("cd ") {
             let path = &input[3..]; // Skip "cd "
-            if let Err(_) = env::set_current_dir(path) {
+
+            // Expand ~ to HOME directory
+            let expanded_path = if path == "~" || path.starts_with("~/") {
+                if let Ok(home) = env::var("HOME") {
+                    if path == "~" {
+                        home
+                    } else {
+                        path.replacen("~", &home, 1)
+                    }
+                } else {
+                    path.to_string()
+                }
+            } else {
+                path.to_string()
+            };
+
+            if let Err(_) = env::set_current_dir(&expanded_path) {
                 println!("cd: {}: No such file or directory", path);
             }
             continue;
