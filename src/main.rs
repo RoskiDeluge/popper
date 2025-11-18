@@ -1,5 +1,8 @@
+use std::env;
 #[allow(unused_imports)]
 use std::io::{self, Write};
+use std::os::unix::fs::PermissionsExt;
+use std::path::Path;
 
 fn main() {
     loop {
@@ -33,11 +36,36 @@ fn main() {
             if cmd == "echo" || cmd == "exit" || cmd == "type" {
                 println!("{} is a shell builtin", cmd);
             } else {
-                println!("{}: not found", cmd);
+                // Search for executable in PATH
+                if let Some(path) = find_in_path(cmd) {
+                    println!("{} is {}", cmd, path);
+                } else {
+                    println!("{}: not found", cmd);
+                }
             }
             continue;
         }
 
         println!("{}: command not found", input);
     }
+}
+
+fn find_in_path(cmd: &str) -> Option<String> {
+    let path_env = env::var("PATH").ok()?;
+
+    for dir in path_env.split(':') {
+        let full_path = Path::new(dir).join(cmd);
+
+        if full_path.exists() {
+            if let Ok(metadata) = std::fs::metadata(&full_path) {
+                let permissions = metadata.permissions();
+                // Check if file has execute permission (user, group, or other)
+                if permissions.mode() & 0o111 != 0 {
+                    return full_path.to_str().map(|s| s.to_string());
+                }
+            }
+        }
+    }
+
+    None
 }
