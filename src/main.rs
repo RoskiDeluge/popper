@@ -10,6 +10,18 @@ fn main() {
 
         io::stdin().read_line(&mut command).unwrap();
 
-        println!("{}: command not found", command.trim());
+        let input = command.trim();
+
+        if input.starts_with("exit") {
+            let parts: Vec<&str> = input.split_whitespace().collect();
+            let exit_code = if parts.len() > 1 {
+                parts[1].parse::<i32>().unwrap_or(0)
+            } else {
+                0
+            };
+            std::process::exit(exit_code);
+        }
+
+        println!("{}: command not found", input);
     }
 }
