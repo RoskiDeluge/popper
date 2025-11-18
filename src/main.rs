@@ -2,6 +2,7 @@ use std::env;
 #[allow(unused_imports)]
 use std::io::{self, Write};
 use std::os::unix::fs::PermissionsExt;
+use std::os::unix::process::CommandExt;
 use std::path::Path;
 use std::process::Command;
 
@@ -65,7 +66,7 @@ fn main() {
         if let Some(path) = find_in_path(cmd) {
             let args = &parts[1..];
 
-            let output = Command::new(path).args(args).output();
+            let output = Command::new(path).arg0(cmd).args(args).output();
 
             match output {
                 Ok(output) => {
