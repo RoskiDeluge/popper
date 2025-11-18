@@ -22,6 +22,12 @@ fn main() {
             std::process::exit(exit_code);
         }
 
+        if input.starts_with("echo ") {
+            let output = &input[5..]; // Skip "echo "
+            println!("{}", output);
+            continue;
+        }
+
         println!("{}: command not found", input);
     }
 }
