@@ -41,9 +41,17 @@ fn main() {
             continue;
         }
 
+        if input.starts_with("cd ") {
+            let path = &input[3..]; // Skip "cd "
+            if let Err(_) = env::set_current_dir(path) {
+                println!("cd: {}: No such file or directory", path);
+            }
+            continue;
+        }
+
         if input.starts_with("type ") {
             let cmd = &input[5..]; // Skip "type "
-            if cmd == "echo" || cmd == "exit" || cmd == "type" || cmd == "pwd" {
+            if cmd == "echo" || cmd == "exit" || cmd == "type" || cmd == "pwd" || cmd == "cd" {
                 println!("{} is a shell builtin", cmd);
             } else {
                 // Search for executable in PATH
@@ -65,7 +73,7 @@ fn main() {
         let cmd = parts[0];
 
         // Check if it's a builtin that doesn't need arguments
-        if cmd == "exit" || cmd == "echo" || cmd == "type" || cmd == "pwd" {
+        if cmd == "exit" || cmd == "echo" || cmd == "type" || cmd == "pwd" || cmd == "cd" {
             println!("{}: command not found", input);
             continue;
         }
