@@ -28,6 +28,16 @@ fn main() {
             continue;
         }
 
+        if input.starts_with("type ") {
+            let cmd = &input[5..]; // Skip "type "
+            if cmd == "echo" || cmd == "exit" || cmd == "type" {
+                println!("{} is a shell builtin", cmd);
+            } else {
+                println!("{}: not found", cmd);
+            }
+            continue;
+        }
+
         println!("{}: command not found", input);
     }
 }
