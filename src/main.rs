@@ -33,9 +33,17 @@ fn main() {
             continue;
         }
 
+        if input == "pwd" {
+            match env::current_dir() {
+                Ok(path) => println!("{}", path.display()),
+                Err(_) => eprintln!("pwd: error getting current directory"),
+            }
+            continue;
+        }
+
         if input.starts_with("type ") {
             let cmd = &input[5..]; // Skip "type "
-            if cmd == "echo" || cmd == "exit" || cmd == "type" {
+            if cmd == "echo" || cmd == "exit" || cmd == "type" || cmd == "pwd" {
                 println!("{} is a shell builtin", cmd);
             } else {
                 // Search for executable in PATH
@@ -57,7 +65,7 @@ fn main() {
         let cmd = parts[0];
 
         // Check if it's a builtin that doesn't need arguments
-        if cmd == "exit" || cmd == "echo" || cmd == "type" {
+        if cmd == "exit" || cmd == "echo" || cmd == "type" || cmd == "pwd" {
             println!("{}: command not found", input);
             continue;
         }
