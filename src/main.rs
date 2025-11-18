@@ -3,6 +3,7 @@ use std::env;
 use std::io::{self, Write};
 use std::os::unix::fs::PermissionsExt;
 use std::path::Path;
+use std::process::Command;
 
 fn main() {
     loop {
@@ -46,7 +47,38 @@ fn main() {
             continue;
         }
 
-        println!("{}: command not found", input);
+        // Try to execute as external program
+        let parts: Vec<&str> = input.split_whitespace().collect();
+        if parts.is_empty() {
+            continue;
+        }
+
+        let cmd = parts[0];
+
+        // Check if it's a builtin that doesn't need arguments
+        if cmd == "exit" || cmd == "echo" || cmd == "type" {
+            println!("{}: command not found", input);
+            continue;
+        }
+
+        // Search for executable in PATH
+        if let Some(path) = find_in_path(cmd) {
+            let args = &parts[1..];
+
+            let output = Command::new(path).args(args).output();
+
+            match output {
+                Ok(output) => {
+                    io::stdout().write_all(&output.stdout).unwrap();
+                    io::stderr().write_all(&output.stderr).unwrap();
+                }
+                Err(_) => {
+                    println!("{}: command not found", input);
+                }
+            }
+        } else {
+            println!("{}: command not found", input);
+        }
     }
 }
 
