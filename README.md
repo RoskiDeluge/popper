@@ -8,7 +8,7 @@
 
 # popper
 
-Agent friendly shell
+Human and agent friendly shell
 
 ## Installation
 
