@@ -1,10 +1,11 @@
 use std::env;
+use std::fs::File;
 #[allow(unused_imports)]
 use std::io::{self, Write};
 use std::os::unix::fs::PermissionsExt;
 use std::os::unix::process::CommandExt;
 use std::path::Path;
-use std::process::Command;
+use std::process::{Command, Stdio};
 
 fn main() {
     loop {
@@ -87,7 +88,14 @@ fn main() {
             continue;
         }
 
-        let cmd = parts[0].as_str();
+        // Check for output redirection
+        let (cmd_parts, output_file) = parse_redirection(&parts);
+
+        if cmd_parts.is_empty() {
+            continue;
+        }
+
+        let cmd = cmd_parts[0].as_str();
 
         // Check if it's a builtin that doesn't need arguments
         if cmd == "exit" || cmd == "echo" || cmd == "type" || cmd == "pwd" || cmd == "cd" {
@@ -97,13 +105,31 @@ fn main() {
 
         // Search for executable in PATH
         if let Some(path) = find_in_path(cmd) {
-            let args = &parts[1..];
+            let args = &cmd_parts[1..];
 
-            let output = Command::new(path).arg0(cmd).args(args).output();
+            let mut command = Command::new(path);
+            command.arg0(cmd).args(args);
+
+            // Setup output redirection if specified
+            if let Some(ref file_path) = output_file {
+                match File::create(file_path) {
+                    Ok(file) => {
+                        command.stdout(Stdio::from(file));
+                    }
+                    Err(_) => {
+                        eprintln!("Failed to create file: {}", file_path);
+                        continue;
+                    }
+                }
+            }
+
+            let output = command.output();
 
             match output {
                 Ok(output) => {
-                    io::stdout().write_all(&output.stdout).unwrap();
+                    if output_file.is_none() {
+                        io::stdout().write_all(&output.stdout).unwrap();
+                    }
                     io::stderr().write_all(&output.stderr).unwrap();
                 }
                 Err(_) => {
@@ -188,4 +214,39 @@ fn parse_arguments(input: &str) -> Vec<String> {
     }
 
     args
+}
+
+fn parse_redirection(parts: &[String]) -> (Vec<String>, Option<String>) {
+    let mut cmd_parts = Vec::new();
+    let mut output_file = None;
+    let mut i = 0;
+
+    while i < parts.len() {
+        let part = &parts[i];
+
+        // Check for > or 1>
+        if part == ">" || part == "1>" {
+            // Next part should be the filename
+            if i + 1 < parts.len() {
+                output_file = Some(parts[i + 1].clone());
+                i += 2;
+                continue;
+            }
+        } else if part.starts_with(">") {
+            // Handle cases like >file (no space)
+            output_file = Some(part[1..].to_string());
+            i += 1;
+            continue;
+        } else if part.starts_with("1>") {
+            // Handle cases like 1>file (no space)
+            output_file = Some(part[2..].to_string());
+            i += 1;
+            continue;
+        }
+
+        cmd_parts.push(part.clone());
+        i += 1;
+    }
+
+    (cmd_parts, output_file)
 }
