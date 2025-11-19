@@ -31,12 +31,47 @@ impl Completer for ShellHelper {
         let input = &line[..pos];
         let mut candidates = Vec::new();
 
+        // Check builtins first
         for builtin in &builtins {
             if builtin.starts_with(input) && !input.is_empty() {
                 candidates.push(Pair {
                     display: builtin.to_string(),
                     replacement: builtin.to_string(),
                 });
+            }
+        }
+
+        // Search for executables in PATH
+        if !input.is_empty() {
+            if let Ok(path_env) = env::var("PATH") {
+                for dir in path_env.split(':') {
+                    let path = Path::new(dir);
+                    if let Ok(entries) = std::fs::read_dir(path) {
+                        for entry in entries.flatten() {
+                            if let Ok(file_name) = entry.file_name().into_string() {
+                                if file_name.starts_with(input) {
+                                    // Check if executable
+                                    if let Ok(metadata) = entry.metadata() {
+                                        let permissions = metadata.permissions();
+                                        if permissions.mode() & 0o111 != 0 {
+                                            let completion = format!("{} ", file_name);
+                                            // Avoid duplicates
+                                            if !candidates
+                                                .iter()
+                                                .any(|c| c.replacement == completion)
+                                            {
+                                                candidates.push(Pair {
+                                                    display: completion.clone(),
+                                                    replacement: completion,
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
