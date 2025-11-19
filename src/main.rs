@@ -101,6 +101,22 @@ fn main() {
     // Track the last index that was appended to file (for history -a)
     let mut last_appended_index: usize = 0;
 
+    // Load history from HISTFILE if set
+    if let Ok(histfile) = env::var("HISTFILE") {
+        if let Ok(file) = File::open(&histfile) {
+            let reader = BufReader::new(file);
+            for line in reader.lines() {
+                if let Ok(cmd) = line {
+                    // Skip empty lines
+                    if !cmd.trim().is_empty() {
+                        command_history.push(cmd.clone());
+                        rl.add_history_entry(&cmd).ok();
+                    }
+                }
+            }
+        }
+    }
+
     loop {
         let readline = rl.readline("$ ");
 
