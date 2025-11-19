@@ -258,6 +258,24 @@ fn main() {
                 continue;
             }
 
+            // Check for history -w <path>
+            if input.starts_with("history -w ") {
+                let path = &input[11..]; // Skip "history -w "
+
+                // Write history to file
+                match File::create(path) {
+                    Ok(mut file) => {
+                        for cmd in &command_history {
+                            writeln!(file, "{}", cmd).ok();
+                        }
+                    }
+                    Err(_) => {
+                        eprintln!("history: {}: Cannot create file", path);
+                    }
+                }
+                continue;
+            }
+
             let limit = if input == "history" {
                 None
             } else {
