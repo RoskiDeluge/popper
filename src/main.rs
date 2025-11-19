@@ -3,7 +3,7 @@ use rustyline::error::ReadlineError;
 use rustyline::highlight::Highlighter;
 use rustyline::hint::Hinter;
 use rustyline::validate::Validator;
-use rustyline::{Context, Editor, Helper};
+use rustyline::{CompletionType, Config, Context, Editor, Helper};
 use std::env;
 use std::fs::File;
 #[allow(unused_imports)]
@@ -88,7 +88,10 @@ impl Highlighter for ShellHelper {}
 impl Validator for ShellHelper {}
 
 fn main() {
-    let mut rl = Editor::new().unwrap();
+    let config = Config::builder()
+        .completion_type(CompletionType::List)
+        .build();
+    let mut rl = Editor::with_config(config).unwrap();
     rl.set_helper(Some(ShellHelper));
 
     loop {
