@@ -478,6 +478,55 @@ fn parse_redirection(
     )
 }
 
+fn is_builtin(cmd: &str) -> bool {
+    matches!(cmd, "echo" | "exit" | "type" | "pwd" | "cd")
+}
+
+fn execute_builtin(
+    cmd: &str,
+    args: &[String],
+    stdin: Option<std::process::ChildStdout>,
+) -> Vec<u8> {
+    use std::io::Read;
+
+    let mut output = Vec::new();
+
+    match cmd {
+        "echo" => {
+            let text = args.join(" ");
+            output.extend_from_slice(text.as_bytes());
+            output.push(b'\n');
+        }
+        "type" => {
+            if let Some(arg) = args.first() {
+                let result = if is_builtin(arg) {
+                    format!("{} is a shell builtin\n", arg)
+                } else if let Some(path) = find_in_path(arg) {
+                    format!("{} is {}\n", arg, path)
+                } else {
+                    format!("{}: not found\n", arg)
+                };
+                output.extend_from_slice(result.as_bytes());
+            }
+        }
+        "pwd" => {
+            if let Ok(path) = env::current_dir() {
+                output.extend_from_slice(path.display().to_string().as_bytes());
+                output.push(b'\n');
+            }
+        }
+        _ => {}
+    }
+
+    // Consume stdin if provided (to avoid broken pipe errors)
+    if let Some(mut stdin_reader) = stdin {
+        let mut _buffer = Vec::new();
+        stdin_reader.read_to_end(&mut _buffer).ok();
+    }
+
+    output
+}
+
 fn execute_pipeline(parts: &[String], pipe_pos: usize) {
     use std::process::Stdio;
 
@@ -491,7 +540,86 @@ fn execute_pipeline(parts: &[String], pipe_pos: usize) {
     let left_cmd = left_parts[0].as_str();
     let right_cmd = right_parts[0].as_str();
 
-    // Find executables in PATH
+    let left_is_builtin = is_builtin(left_cmd);
+    let right_is_builtin = is_builtin(right_cmd);
+
+    // Case 1: Both are built-ins
+    if left_is_builtin && right_is_builtin {
+        let _left_output = execute_builtin(left_cmd, &left_parts[1..].to_vec(), None);
+        // Right built-in doesn't actually read from left (based on test description)
+        let right_output = execute_builtin(right_cmd, &right_parts[1..].to_vec(), None);
+        io::stdout().write_all(&right_output).unwrap();
+        return;
+    }
+
+    // Case 2: Left is built-in, right is external
+    if left_is_builtin && !right_is_builtin {
+        let left_output = execute_builtin(left_cmd, &left_parts[1..].to_vec(), None);
+
+        let Some(right_path) = find_in_path(right_cmd) else {
+            eprintln!("{}: command not found", right_cmd);
+            return;
+        };
+
+        let mut right_command = Command::new(right_path);
+        right_command.arg0(right_cmd).args(&right_parts[1..]);
+        right_command.stdin(Stdio::piped());
+
+        let mut right_child = match right_command.spawn() {
+            Ok(child) => child,
+            Err(_) => {
+                eprintln!("Failed to execute {}", right_cmd);
+                return;
+            }
+        };
+
+        // Write left's output to right's stdin
+        if let Some(mut stdin) = right_child.stdin.take() {
+            stdin.write_all(&left_output).ok();
+        }
+
+        match right_child.wait_with_output() {
+            Ok(output) => {
+                io::stdout().write_all(&output.stdout).unwrap();
+                io::stderr().write_all(&output.stderr).unwrap();
+            }
+            Err(_) => {
+                eprintln!("Failed to wait for {}", right_cmd);
+            }
+        }
+        return;
+    }
+
+    // Case 3: Left is external, right is built-in
+    if !left_is_builtin && right_is_builtin {
+        let Some(left_path) = find_in_path(left_cmd) else {
+            eprintln!("{}: command not found", left_cmd);
+            return;
+        };
+
+        let mut left_command = Command::new(left_path);
+        left_command.arg0(left_cmd).args(&left_parts[1..]);
+        left_command.stdout(Stdio::piped());
+
+        let mut left_child = match left_command.spawn() {
+            Ok(child) => child,
+            Err(_) => {
+                eprintln!("Failed to execute {}", left_cmd);
+                return;
+            }
+        };
+
+        let left_stdout = left_child.stdout.take();
+        let right_output = execute_builtin(right_cmd, &right_parts[1..].to_vec(), left_stdout);
+
+        io::stdout().write_all(&right_output).unwrap();
+
+        left_child.kill().ok();
+        left_child.wait().ok();
+        return;
+    }
+
+    // Case 4: Both are external commands (original implementation)
     let Some(left_path) = find_in_path(left_cmd) else {
         eprintln!("{}: command not found", left_cmd);
         return;
