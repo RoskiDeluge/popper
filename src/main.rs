@@ -214,6 +214,12 @@ fn main() {
             continue;
         }
 
+        // Check for pipeline
+        if let Some(pipe_pos) = parts.iter().position(|p| p == "|") {
+            execute_pipeline(&parts, pipe_pos);
+            continue;
+        }
+
         // Check for output redirection
         let (cmd_parts, stdout_file, stdout_append, stderr_file, stderr_append) =
             parse_redirection(&parts);
@@ -470,4 +476,66 @@ fn parse_redirection(
         stderr_file,
         stderr_append,
     )
+}
+
+fn execute_pipeline(parts: &[String], pipe_pos: usize) {
+    use std::process::Stdio;
+
+    let left_parts = &parts[..pipe_pos];
+    let right_parts = &parts[pipe_pos + 1..];
+
+    if left_parts.is_empty() || right_parts.is_empty() {
+        return;
+    }
+
+    let left_cmd = left_parts[0].as_str();
+    let right_cmd = right_parts[0].as_str();
+
+    // Find executables in PATH
+    let Some(left_path) = find_in_path(left_cmd) else {
+        eprintln!("{}: command not found", left_cmd);
+        return;
+    };
+
+    let Some(right_path) = find_in_path(right_cmd) else {
+        eprintln!("{}: command not found", right_cmd);
+        return;
+    };
+
+    // Create the first command (left side of pipe)
+    let mut left_command = Command::new(left_path);
+    left_command.arg0(left_cmd).args(&left_parts[1..]);
+    left_command.stdout(Stdio::piped());
+
+    // Spawn the first command
+    let mut left_child = match left_command.spawn() {
+        Ok(child) => child,
+        Err(_) => {
+            eprintln!("Failed to execute {}", left_cmd);
+            return;
+        }
+    };
+
+    // Create the second command (right side of pipe)
+    let mut right_command = Command::new(right_path);
+    right_command.arg0(right_cmd).args(&right_parts[1..]);
+
+    // Connect left's stdout to right's stdin
+    if let Some(left_stdout) = left_child.stdout.take() {
+        right_command.stdin(Stdio::from(left_stdout));
+    }
+
+    // Execute the second command and wait for it
+    match right_command.output() {
+        Ok(output) => {
+            io::stdout().write_all(&output.stdout).unwrap();
+            io::stderr().write_all(&output.stderr).unwrap();
+        }
+        Err(_) => {
+            eprintln!("Failed to execute {}", right_cmd);
+        }
+    }
+
+    // Wait for the first command to finish
+    left_child.wait().ok();
 }
