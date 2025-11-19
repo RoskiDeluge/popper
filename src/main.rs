@@ -7,7 +7,7 @@ use rustyline::{CompletionType, Config, Context, Editor, Helper};
 use std::env;
 use std::fs::File;
 #[allow(unused_imports)]
-use std::io::{self, Write};
+use std::io::{self, BufRead, BufReader, Write};
 use std::os::unix::fs::PermissionsExt;
 use std::os::unix::process::CommandExt;
 use std::path::Path;
@@ -236,6 +236,28 @@ fn main() {
         }
 
         if input == "history" || input.starts_with("history ") {
+            // Check for history -r <path>
+            if input.starts_with("history -r ") {
+                let path = &input[11..]; // Skip "history -r "
+
+                // Read history from file
+                if let Ok(file) = File::open(path) {
+                    let reader = BufReader::new(file);
+                    for line in reader.lines() {
+                        if let Ok(cmd) = line {
+                            // Skip empty lines
+                            if !cmd.trim().is_empty() {
+                                command_history.push(cmd.clone());
+                                rl.add_history_entry(&cmd).ok();
+                            }
+                        }
+                    }
+                } else {
+                    eprintln!("history: {}: No such file or directory", path);
+                }
+                continue;
+            }
+
             let limit = if input == "history" {
                 None
             } else {
