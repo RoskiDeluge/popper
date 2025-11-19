@@ -31,7 +31,24 @@ fn main() {
         if input.starts_with("echo ") {
             let args_str = &input[5..]; // Skip "echo "
             let args = parse_arguments(args_str);
-            println!("{}", args.join(" "));
+            let (cmd_args, output_file) = parse_redirection(&args);
+            
+            let output_text = cmd_args.join(" ");
+            
+            if let Some(file_path) = output_file {
+                // Redirect to file
+                match File::create(&file_path) {
+                    Ok(mut file) => {
+                        writeln!(file, "{}", output_text).ok();
+                    }
+                    Err(_) => {
+                        eprintln!("Failed to create file: {}", file_path);
+                    }
+                }
+            } else {
+                // Print to stdout
+                println!("{}", output_text);
+            }
             continue;
         }
 
