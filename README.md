@@ -1,35 +1,67 @@
-[![progress-banner](https://backend.codecrafters.io/progress/shell/116f784e-592b-45b7-8450-919e8fc404c1)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
-
-This is a starting point for Rust solutions to the
-["Build Your Own Shell" Challenge](https://app.codecrafters.io/courses/shell/overview).
-
-In this challenge, you'll build your own POSIX compliant shell that's capable of
-interpreting shell commands, running external programs and builtin commands like
-cd, pwd, echo and more. Along the way, you'll learn about shell command parsing,
-REPLs, builtin commands, and more.
-
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
-
-# Passing the first stage
-
-The entry point for your `shell` implementation is in `src/main.rs`. Study and
-uncomment the relevant code, and push your changes to pass the first stage:
-
-```sh
-git commit -am "pass 1st stage" # any msg
-git push origin master
+```
+ ____   ___  ____  ____  _____ ____  
+|  _ \ / _ \|  _ \|  _ \| ____|  _ \ 
+| |_) | | | | |_) | |_) |  _| | |_) |
+|  __/| |_| |  __/|  __/| |___|  _ < 
+|_|    \___/|_|   |_|   |_____|_| \_\
 ```
 
-Time to move on to the next stage!
+# popper
 
-# Stage 2 & beyond
+Agent friendly shell
 
-Note: This section is for stages 2 and beyond.
+## Installation
 
-1. Ensure you have `cargo (1.87)` installed locally
-1. Run `./your_program.sh` to run your program, which is implemented in
-   `src/main.rs`. This command compiles your Rust project, so it might be slow
-   the first time you run it. Subsequent runs will be fast.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
+### Using Pre-built Binary
+
+Download the latest release from the releases page and add it to your PATH.
+
+### Building from Source
+
+```bash
+git clone https://github.com/RoskiDeluge/popper.git
+cd popper
+cargo build --release
+```
+
+The binary will be available at `target/release/popper`.
+
+## Usage
+
+Run the shell:
+
+```bash
+./target/release/popper
+```
+
+Or install it system-wide:
+
+```bash
+cargo install --path .
+popper
+```
+
+## Development
+
+### Prerequisites
+
+- Rust (latest stable version)
+- Cargo
+
+### Building for Development
+
+```bash
+cargo build
+```
+
+### Running Tests
+
+```bash
+cargo test
+```
+
+### Running in Development Mode
+
+```bash
+cargo run
+```
