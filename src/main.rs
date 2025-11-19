@@ -1,3 +1,9 @@
+use rustyline::completion::{Completer, Pair};
+use rustyline::error::ReadlineError;
+use rustyline::highlight::Highlighter;
+use rustyline::hint::Hinter;
+use rustyline::validate::Validator;
+use rustyline::{Context, Editor, Helper};
 use std::env;
 use std::fs::File;
 #[allow(unused_imports)]
@@ -7,16 +13,63 @@ use std::os::unix::process::CommandExt;
 use std::path::Path;
 use std::process::{Command, Stdio};
 
+struct ShellHelper;
+
+impl Helper for ShellHelper {}
+
+impl Completer for ShellHelper {
+    type Candidate = Pair;
+
+    fn complete(
+        &self,
+        line: &str,
+        pos: usize,
+        _ctx: &Context<'_>,
+    ) -> rustyline::Result<(usize, Vec<Pair>)> {
+        let builtins = ["echo ", "exit ", "type ", "pwd", "cd "];
+
+        let input = &line[..pos];
+        let mut candidates = Vec::new();
+
+        for builtin in &builtins {
+            if builtin.starts_with(input) && !input.is_empty() {
+                candidates.push(Pair {
+                    display: builtin.to_string(),
+                    replacement: builtin.to_string(),
+                });
+            }
+        }
+
+        Ok((0, candidates))
+    }
+}
+
+impl Hinter for ShellHelper {
+    type Hint = String;
+}
+
+impl Highlighter for ShellHelper {}
+
+impl Validator for ShellHelper {}
+
 fn main() {
+    let mut rl = Editor::new().unwrap();
+    rl.set_helper(Some(ShellHelper));
+
     loop {
-        print!("$ ");
-        io::stdout().flush().unwrap();
+        let readline = rl.readline("$ ");
 
-        let mut command = String::new();
+        let input = match readline {
+            Ok(line) => line,
+            Err(ReadlineError::Interrupted) | Err(ReadlineError::Eof) => {
+                break;
+            }
+            Err(_) => {
+                continue;
+            }
+        };
 
-        io::stdin().read_line(&mut command).unwrap();
-
-        let input = command.trim();
+        let input = input.trim();
 
         if input.starts_with("exit") {
             let parts: Vec<&str> = input.split_whitespace().collect();
@@ -285,13 +338,7 @@ fn parse_arguments(input: &str) -> Vec<String> {
 
 fn parse_redirection(
     parts: &[String],
-) -> (
-    Vec<String>,
-    Option<String>,
-    bool,
-    Option<String>,
-    bool,
-) {
+) -> (Vec<String>, Option<String>, bool, Option<String>, bool) {
     let mut cmd_parts = Vec::new();
     let mut stdout_file = None;
     let mut stdout_append = false;
@@ -376,5 +423,11 @@ fn parse_redirection(
         i += 1;
     }
 
-    (cmd_parts, stdout_file, stdout_append, stderr_file, stderr_append)
+    (
+        cmd_parts,
+        stdout_file,
+        stdout_append,
+        stderr_file,
+        stderr_append,
+    )
 }
