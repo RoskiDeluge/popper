@@ -26,7 +26,7 @@ impl Completer for ShellHelper {
         pos: usize,
         _ctx: &Context<'_>,
     ) -> rustyline::Result<(usize, Vec<Pair>)> {
-        let builtins = ["echo ", "exit ", "type ", "pwd", "cd "];
+        let builtins = ["echo ", "exit ", "type ", "pwd", "cd ", "history"];
 
         let input = &line[..pos];
         let mut candidates = Vec::new();
@@ -96,6 +96,9 @@ fn main() {
     let mut rl = Editor::with_config(config).unwrap();
     rl.set_helper(Some(ShellHelper));
 
+    // Track command history
+    let mut command_history: Vec<String> = Vec::new();
+
     loop {
         let readline = rl.readline("$ ");
 
@@ -110,6 +113,11 @@ fn main() {
         };
 
         let input = input.trim();
+
+        // Add non-empty commands to history
+        if !input.is_empty() {
+            command_history.push(input.to_string());
+        }
 
         // Parse input first to check for pipelines
         let parts = parse_arguments(input);
@@ -206,7 +214,13 @@ fn main() {
 
         if input.starts_with("type ") {
             let cmd = &input[5..]; // Skip "type "
-            if cmd == "echo" || cmd == "exit" || cmd == "type" || cmd == "pwd" || cmd == "cd" {
+            if cmd == "echo"
+                || cmd == "exit"
+                || cmd == "type"
+                || cmd == "pwd"
+                || cmd == "cd"
+                || cmd == "history"
+            {
                 println!("{} is a shell builtin", cmd);
             } else {
                 // Search for executable in PATH
@@ -215,6 +229,13 @@ fn main() {
                 } else {
                     println!("{}: not found", cmd);
                 }
+            }
+            continue;
+        }
+
+        if input == "history" {
+            for (index, cmd) in command_history.iter().enumerate() {
+                println!("{:5}  {}", index + 1, cmd);
             }
             continue;
         }
@@ -480,7 +501,7 @@ fn parse_redirection(
 }
 
 fn is_builtin(cmd: &str) -> bool {
-    matches!(cmd, "echo" | "exit" | "type" | "pwd" | "cd")
+    matches!(cmd, "echo" | "exit" | "type" | "pwd" | "cd" | "history")
 }
 
 fn execute_builtin(
