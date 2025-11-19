@@ -525,17 +525,33 @@ fn execute_pipeline(parts: &[String], pipe_pos: usize) {
         right_command.stdin(Stdio::from(left_stdout));
     }
 
-    // Execute the second command and wait for it
-    match right_command.output() {
-        Ok(output) => {
-            io::stdout().write_all(&output.stdout).unwrap();
-            io::stderr().write_all(&output.stderr).unwrap();
-        }
+    // Spawn the second command
+    let mut right_child = match right_command.spawn() {
+        Ok(child) => child,
         Err(_) => {
             eprintln!("Failed to execute {}", right_cmd);
+            left_child.kill().ok();
+            return;
+        }
+    };
+
+    // Wait for the right side to finish (it determines when pipeline completes)
+    match right_child.wait() {
+        Ok(status) => {
+            // Once right side finishes, kill the left side if it's still running
+            left_child.kill().ok();
+            left_child.wait().ok();
+
+            // Exit with the status of the right command
+            if !status.success() {
+                if let Some(code) = status.code() {
+                    std::process::exit(code);
+                }
+            }
+        }
+        Err(_) => {
+            eprintln!("Failed to wait for {}", right_cmd);
+            left_child.kill().ok();
         }
     }
-
-    // Wait for the first command to finish
-    left_child.wait().ok();
 }
