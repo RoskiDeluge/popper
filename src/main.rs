@@ -117,6 +117,8 @@ fn main() {
         // Add non-empty commands to history
         if !input.is_empty() {
             command_history.push(input.to_string());
+            // Also add to rustyline's history for up/down arrow navigation
+            rl.add_history_entry(input).ok();
         }
 
         // Parse input first to check for pipelines
