@@ -28,8 +28,9 @@ fn main() {
         }
 
         if input.starts_with("echo ") {
-            let output = &input[5..]; // Skip "echo "
-            println!("{}", output);
+            let args_str = &input[5..]; // Skip "echo "
+            let args = parse_arguments(args_str);
+            println!("{}", args.join(" "));
             continue;
         }
 
@@ -81,12 +82,12 @@ fn main() {
         }
 
         // Try to execute as external program
-        let parts: Vec<&str> = input.split_whitespace().collect();
+        let parts = parse_arguments(input);
         if parts.is_empty() {
             continue;
         }
 
-        let cmd = parts[0];
+        let cmd = parts[0].as_str();
 
         // Check if it's a builtin that doesn't need arguments
         if cmd == "exit" || cmd == "echo" || cmd == "type" || cmd == "pwd" || cmd == "cd" {
@@ -133,4 +134,34 @@ fn find_in_path(cmd: &str) -> Option<String> {
     }
 
     None
+}
+
+fn parse_arguments(input: &str) -> Vec<String> {
+    let mut args = Vec::new();
+    let mut current_arg = String::new();
+    let mut in_single_quote = false;
+    let mut chars = input.chars().peekable();
+
+    while let Some(ch) = chars.next() {
+        match ch {
+            '\'' => {
+                in_single_quote = !in_single_quote;
+            }
+            ' ' | '\t' if !in_single_quote => {
+                if !current_arg.is_empty() {
+                    args.push(current_arg.clone());
+                    current_arg.clear();
+                }
+            }
+            _ => {
+                current_arg.push(ch);
+            }
+        }
+    }
+
+    if !current_arg.is_empty() {
+        args.push(current_arg);
+    }
+
+    args
 }
