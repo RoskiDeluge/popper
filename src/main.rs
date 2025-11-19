@@ -54,15 +54,14 @@ impl Completer for ShellHelper {
                                     if let Ok(metadata) = entry.metadata() {
                                         let permissions = metadata.permissions();
                                         if permissions.mode() & 0o111 != 0 {
-                                            let completion = format!("{} ", file_name);
                                             // Avoid duplicates
                                             if !candidates
                                                 .iter()
-                                                .any(|c| c.replacement == completion)
+                                                .any(|c| c.replacement.trim() == file_name)
                                             {
                                                 candidates.push(Pair {
-                                                    display: completion.clone(),
-                                                    replacement: completion,
+                                                    display: file_name.clone(),
+                                                    replacement: format!("{} ", file_name),
                                                 });
                                             }
                                         }
@@ -74,6 +73,9 @@ impl Completer for ShellHelper {
                 }
             }
         }
+
+        // Sort candidates alphabetically
+        candidates.sort_by(|a, b| a.display.cmp(&b.display));
 
         Ok((0, candidates))
     }
