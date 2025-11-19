@@ -118,8 +118,8 @@ fn main() {
         }
 
         // Check for pipeline first (before handling built-ins)
-        if let Some(pipe_pos) = parts.iter().position(|p| p == "|") {
-            execute_pipeline(&parts, pipe_pos);
+        if parts.iter().any(|p| p == "|") {
+            execute_pipeline(&parts);
             continue;
         }
 
@@ -528,159 +528,121 @@ fn execute_builtin(
     output
 }
 
-fn execute_pipeline(parts: &[String], pipe_pos: usize) {
+fn execute_pipeline(parts: &[String]) {
     use std::process::Stdio;
 
-    let left_parts = &parts[..pipe_pos];
-    let right_parts = &parts[pipe_pos + 1..];
+    // Split commands by pipe operator
+    let mut commands: Vec<Vec<String>> = Vec::new();
+    let mut current_cmd = Vec::new();
 
-    if left_parts.is_empty() || right_parts.is_empty() {
-        return;
-    }
-
-    let left_cmd = left_parts[0].as_str();
-    let right_cmd = right_parts[0].as_str();
-
-    let left_is_builtin = is_builtin(left_cmd);
-    let right_is_builtin = is_builtin(right_cmd);
-
-    // Case 1: Both are built-ins
-    if left_is_builtin && right_is_builtin {
-        let _left_output = execute_builtin(left_cmd, &left_parts[1..].to_vec(), None);
-        // Right built-in doesn't actually read from left (based on test description)
-        let right_output = execute_builtin(right_cmd, &right_parts[1..].to_vec(), None);
-        io::stdout().write_all(&right_output).unwrap();
-        return;
-    }
-
-    // Case 2: Left is built-in, right is external
-    if left_is_builtin && !right_is_builtin {
-        let left_output = execute_builtin(left_cmd, &left_parts[1..].to_vec(), None);
-
-        let Some(right_path) = find_in_path(right_cmd) else {
-            eprintln!("{}: command not found", right_cmd);
-            return;
-        };
-
-        let mut right_command = Command::new(right_path);
-        right_command.arg0(right_cmd).args(&right_parts[1..]);
-        right_command.stdin(Stdio::piped());
-
-        let mut right_child = match right_command.spawn() {
-            Ok(child) => child,
-            Err(_) => {
-                eprintln!("Failed to execute {}", right_cmd);
-                return;
+    for part in parts {
+        if part == "|" {
+            if !current_cmd.is_empty() {
+                commands.push(current_cmd.clone());
+                current_cmd.clear();
             }
-        };
+        } else {
+            current_cmd.push(part.clone());
+        }
+    }
+    if !current_cmd.is_empty() {
+        commands.push(current_cmd);
+    }
 
-        // Write left's output to right's stdin
-        if let Some(mut stdin) = right_child.stdin.take() {
-            stdin.write_all(&left_output).ok();
+    if commands.is_empty() {
+        return;
+    }
+
+    // Track child processes
+    let mut children: Vec<std::process::Child> = Vec::new();
+    let mut prev_stdout: Option<std::process::ChildStdout> = None;
+
+    for (i, cmd_parts) in commands.iter().enumerate() {
+        if cmd_parts.is_empty() {
+            continue;
         }
 
-        match right_child.wait_with_output() {
-            Ok(output) => {
-                io::stdout().write_all(&output.stdout).unwrap();
-                io::stderr().write_all(&output.stderr).unwrap();
-            }
-            Err(_) => {
-                eprintln!("Failed to wait for {}", right_cmd);
-            }
-        }
-        return;
-    }
+        let cmd = cmd_parts[0].as_str();
+        let args = &cmd_parts[1..];
+        let is_last = i == commands.len() - 1;
 
-    // Case 3: Left is external, right is built-in
-    if !left_is_builtin && right_is_builtin {
-        let Some(left_path) = find_in_path(left_cmd) else {
-            eprintln!("{}: command not found", left_cmd);
-            return;
-        };
+        if is_builtin(cmd) {
+            // Handle built-in command
+            let output = execute_builtin(cmd, args, prev_stdout.take());
 
-        let mut left_command = Command::new(left_path);
-        left_command.arg0(left_cmd).args(&left_parts[1..]);
-        left_command.stdout(Stdio::piped());
+            if is_last {
+                // Last command: write to stdout
+                io::stdout().write_all(&output).unwrap();
+            } else {
+                // Not last: need to create a pipe for next command
+                // Use 'cat' as a pipe helper to convert Vec<u8> to ChildStdout
+                let mut child_cmd = Command::new("cat");
+                child_cmd.stdin(Stdio::piped());
+                child_cmd.stdout(Stdio::piped());
 
-        let mut left_child = match left_command.spawn() {
-            Ok(child) => child,
-            Err(_) => {
-                eprintln!("Failed to execute {}", left_cmd);
-                return;
-            }
-        };
+                let mut child = match child_cmd.spawn() {
+                    Ok(c) => c,
+                    Err(_) => {
+                        eprintln!("Failed to create pipe for builtin");
+                        return;
+                    }
+                };
 
-        let left_stdout = left_child.stdout.take();
-        let right_output = execute_builtin(right_cmd, &right_parts[1..].to_vec(), left_stdout);
-
-        io::stdout().write_all(&right_output).unwrap();
-
-        left_child.kill().ok();
-        left_child.wait().ok();
-        return;
-    }
-
-    // Case 4: Both are external commands (original implementation)
-    let Some(left_path) = find_in_path(left_cmd) else {
-        eprintln!("{}: command not found", left_cmd);
-        return;
-    };
-
-    let Some(right_path) = find_in_path(right_cmd) else {
-        eprintln!("{}: command not found", right_cmd);
-        return;
-    };
-
-    // Create the first command (left side of pipe)
-    let mut left_command = Command::new(left_path);
-    left_command.arg0(left_cmd).args(&left_parts[1..]);
-    left_command.stdout(Stdio::piped());
-
-    // Spawn the first command
-    let mut left_child = match left_command.spawn() {
-        Ok(child) => child,
-        Err(_) => {
-            eprintln!("Failed to execute {}", left_cmd);
-            return;
-        }
-    };
-
-    // Create the second command (right side of pipe)
-    let mut right_command = Command::new(right_path);
-    right_command.arg0(right_cmd).args(&right_parts[1..]);
-
-    // Connect left's stdout to right's stdin
-    if let Some(left_stdout) = left_child.stdout.take() {
-        right_command.stdin(Stdio::from(left_stdout));
-    }
-
-    // Spawn the second command
-    let mut right_child = match right_command.spawn() {
-        Ok(child) => child,
-        Err(_) => {
-            eprintln!("Failed to execute {}", right_cmd);
-            left_child.kill().ok();
-            return;
-        }
-    };
-
-    // Wait for the right side to finish (it determines when pipeline completes)
-    match right_child.wait() {
-        Ok(status) => {
-            // Once right side finishes, kill the left side if it's still running
-            left_child.kill().ok();
-            left_child.wait().ok();
-
-            // Exit with the status of the right command
-            if !status.success() {
-                if let Some(code) = status.code() {
-                    std::process::exit(code);
+                // Write builtin output to cat's stdin
+                if let Some(mut stdin) = child.stdin.take() {
+                    stdin.write_all(&output).ok();
                 }
+
+                prev_stdout = child.stdout.take();
+                children.push(child);
             }
+        } else {
+            // Handle external command
+            let Some(cmd_path) = find_in_path(cmd) else {
+                eprintln!("{}: command not found", cmd);
+                // Kill previous processes
+                for mut child in children {
+                    child.kill().ok();
+                }
+                return;
+            };
+
+            let mut command = Command::new(cmd_path);
+            command.arg0(cmd).args(args);
+
+            // Setup stdin from previous command
+            if let Some(stdout) = prev_stdout.take() {
+                command.stdin(Stdio::from(stdout));
+            }
+
+            // Setup stdout for next command or terminal
+            if !is_last {
+                command.stdout(Stdio::piped());
+            }
+
+            let mut child = match command.spawn() {
+                Ok(c) => c,
+                Err(_) => {
+                    eprintln!("Failed to execute {}", cmd);
+                    // Kill previous processes
+                    for mut child in children {
+                        child.kill().ok();
+                    }
+                    return;
+                }
+            };
+
+            // Save stdout for next command if not last
+            if !is_last {
+                prev_stdout = child.stdout.take();
+            }
+
+            children.push(child);
         }
-        Err(_) => {
-            eprintln!("Failed to wait for {}", right_cmd);
-            left_child.kill().ok();
-        }
+    }
+
+    // Wait for all children to finish
+    for mut child in children {
+        child.wait().ok();
     }
 }
