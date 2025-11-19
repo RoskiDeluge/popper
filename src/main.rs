@@ -98,6 +98,8 @@ fn main() {
 
     // Track command history
     let mut command_history: Vec<String> = Vec::new();
+    // Track the last index that was appended to file (for history -a)
+    let mut last_appended_index: usize = 0;
 
     loop {
         let readline = rl.readline("$ ");
@@ -268,6 +270,31 @@ fn main() {
                         for cmd in &command_history {
                             writeln!(file, "{}", cmd).ok();
                         }
+                    }
+                    Err(_) => {
+                        eprintln!("history: {}: Cannot create file", path);
+                    }
+                }
+                continue;
+            }
+
+            // Check for history -a <path>
+            if input.starts_with("history -a ") {
+                let path = &input[11..]; // Skip "history -a "
+
+                // Append new commands to file
+                match std::fs::OpenOptions::new()
+                    .create(true)
+                    .append(true)
+                    .open(path)
+                {
+                    Ok(mut file) => {
+                        // Append only commands that haven't been appended yet
+                        for cmd in &command_history[last_appended_index..] {
+                            writeln!(file, "{}", cmd).ok();
+                        }
+                        // Update the last appended index
+                        last_appended_index = command_history.len();
                     }
                     Err(_) => {
                         eprintln!("history: {}: Cannot create file", path);
