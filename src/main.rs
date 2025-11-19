@@ -111,10 +111,23 @@ fn main() {
 
         let input = input.trim();
 
+        // Parse input first to check for pipelines
+        let parts = parse_arguments(input);
+        if parts.is_empty() {
+            continue;
+        }
+
+        // Check for pipeline first (before handling built-ins)
+        if let Some(pipe_pos) = parts.iter().position(|p| p == "|") {
+            execute_pipeline(&parts, pipe_pos);
+            continue;
+        }
+
+        // Now handle built-in commands that don't involve pipelines
         if input.starts_with("exit") {
-            let parts: Vec<&str> = input.split_whitespace().collect();
-            let exit_code = if parts.len() > 1 {
-                parts[1].parse::<i32>().unwrap_or(0)
+            let exit_parts: Vec<&str> = input.split_whitespace().collect();
+            let exit_code = if exit_parts.len() > 1 {
+                exit_parts[1].parse::<i32>().unwrap_or(0)
             } else {
                 0
             };
@@ -122,10 +135,8 @@ fn main() {
         }
 
         if input.starts_with("echo ") {
-            let args_str = &input[5..]; // Skip "echo "
-            let args = parse_arguments(args_str);
             let (cmd_args, stdout_file, stdout_append, stderr_file, _stderr_append) =
-                parse_redirection(&args);
+                parse_redirection(&parts[1..]); // Skip "echo" itself
 
             let output_text = cmd_args.join(" ");
 
@@ -209,16 +220,6 @@ fn main() {
         }
 
         // Try to execute as external program
-        let parts = parse_arguments(input);
-        if parts.is_empty() {
-            continue;
-        }
-
-        // Check for pipeline
-        if let Some(pipe_pos) = parts.iter().position(|p| p == "|") {
-            execute_pipeline(&parts, pipe_pos);
-            continue;
-        }
 
         // Check for output redirection
         let (cmd_parts, stdout_file, stdout_append, stderr_file, stderr_append) =
