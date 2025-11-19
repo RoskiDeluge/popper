@@ -145,6 +145,12 @@ fn parse_arguments(input: &str) -> Vec<String> {
 
     while let Some(ch) = chars.next() {
         match ch {
+            '\\' if !in_single_quote => {
+                // Backslash escapes the next character (except in single quotes)
+                if let Some(next_ch) = chars.next() {
+                    current_arg.push(next_ch);
+                }
+            }
             '\'' if !in_double_quote => {
                 in_single_quote = !in_single_quote;
             }
