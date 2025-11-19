@@ -89,6 +89,16 @@ impl Highlighter for ShellHelper {}
 
 impl Validator for ShellHelper {}
 
+fn save_history_to_file(command_history: &[String]) {
+    if let Ok(histfile) = env::var("HISTFILE") {
+        if let Ok(mut file) = File::create(&histfile) {
+            for cmd in command_history {
+                writeln!(file, "{}", cmd).ok();
+            }
+        }
+    }
+}
+
 fn main() {
     let config = Config::builder()
         .completion_type(CompletionType::List)
@@ -123,6 +133,8 @@ fn main() {
         let input = match readline {
             Ok(line) => line,
             Err(ReadlineError::Interrupted) | Err(ReadlineError::Eof) => {
+                // Save history before exiting
+                save_history_to_file(&command_history);
                 break;
             }
             Err(_) => {
@@ -159,6 +171,8 @@ fn main() {
             } else {
                 0
             };
+            // Save history before exiting
+            save_history_to_file(&command_history);
             std::process::exit(exit_code);
         }
 
