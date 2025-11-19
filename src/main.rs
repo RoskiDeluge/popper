@@ -31,13 +31,23 @@ fn main() {
         if input.starts_with("echo ") {
             let args_str = &input[5..]; // Skip "echo "
             let args = parse_arguments(args_str);
-            let (cmd_args, stdout_file, stderr_file) = parse_redirection(&args);
+            let (cmd_args, stdout_file, stdout_append, stderr_file, _stderr_append) =
+                parse_redirection(&args);
 
             let output_text = cmd_args.join(" ");
 
             if let Some(file_path) = stdout_file {
                 // Redirect stdout to file
-                match File::create(&file_path) {
+                let file_result = if stdout_append {
+                    std::fs::OpenOptions::new()
+                        .create(true)
+                        .append(true)
+                        .open(&file_path)
+                } else {
+                    File::create(&file_path)
+                };
+
+                match file_result {
                     Ok(mut file) => {
                         writeln!(file, "{}", output_text).ok();
                     }
@@ -112,7 +122,8 @@ fn main() {
         }
 
         // Check for output redirection
-        let (cmd_parts, stdout_file, stderr_file) = parse_redirection(&parts);
+        let (cmd_parts, stdout_file, stdout_append, stderr_file, stderr_append) =
+            parse_redirection(&parts);
 
         if cmd_parts.is_empty() {
             continue;
@@ -135,7 +146,16 @@ fn main() {
 
             // Setup stdout redirection if specified
             if let Some(ref file_path) = stdout_file {
-                match File::create(file_path) {
+                let file_result = if stdout_append {
+                    std::fs::OpenOptions::new()
+                        .create(true)
+                        .append(true)
+                        .open(file_path)
+                } else {
+                    File::create(file_path)
+                };
+
+                match file_result {
                     Ok(file) => {
                         command.stdout(Stdio::from(file));
                     }
@@ -148,7 +168,16 @@ fn main() {
 
             // Setup stderr redirection if specified
             if let Some(ref file_path) = stderr_file {
-                match File::create(file_path) {
+                let file_result = if stderr_append {
+                    std::fs::OpenOptions::new()
+                        .create(true)
+                        .append(true)
+                        .open(file_path)
+                } else {
+                    File::create(file_path)
+                };
+
+                match file_result {
                     Ok(file) => {
                         command.stderr(Stdio::from(file));
                     }
@@ -254,43 +283,91 @@ fn parse_arguments(input: &str) -> Vec<String> {
     args
 }
 
-fn parse_redirection(parts: &[String]) -> (Vec<String>, Option<String>, Option<String>) {
+fn parse_redirection(
+    parts: &[String],
+) -> (
+    Vec<String>,
+    Option<String>,
+    bool,
+    Option<String>,
+    bool,
+) {
     let mut cmd_parts = Vec::new();
     let mut stdout_file = None;
+    let mut stdout_append = false;
     let mut stderr_file = None;
+    let mut stderr_append = false;
     let mut i = 0;
 
     while i < parts.len() {
         let part = &parts[i];
 
-        // Check for > or 1> (stdout)
-        if part == ">" || part == "1>" {
-            // Next part should be the filename
+        // Check for >> or 1>> (stdout append)
+        if part == ">>" || part == "1>>" {
             if i + 1 < parts.len() {
                 stdout_file = Some(parts[i + 1].clone());
+                stdout_append = true;
+                i += 2;
+                continue;
+            }
+        } else if part == "2>>" {
+            // stderr append
+            if i + 1 < parts.len() {
+                stderr_file = Some(parts[i + 1].clone());
+                stderr_append = true;
+                i += 2;
+                continue;
+            }
+        } else if part == ">" || part == "1>" {
+            // stdout overwrite
+            if i + 1 < parts.len() {
+                stdout_file = Some(parts[i + 1].clone());
+                stdout_append = false;
                 i += 2;
                 continue;
             }
         } else if part == "2>" {
-            // Next part should be the filename for stderr
+            // stderr overwrite
             if i + 1 < parts.len() {
                 stderr_file = Some(parts[i + 1].clone());
+                stderr_append = false;
                 i += 2;
                 continue;
             }
+        } else if part.starts_with(">>") && !part.starts_with("2>>") {
+            // Handle cases like >>file (no space)
+            stdout_file = Some(part[2..].to_string());
+            stdout_append = true;
+            i += 1;
+            continue;
+        } else if part.starts_with("1>>") {
+            // Handle cases like 1>>file (no space)
+            stdout_file = Some(part[3..].to_string());
+            stdout_append = true;
+            i += 1;
+            continue;
+        } else if part.starts_with("2>>") {
+            // Handle cases like 2>>file (no space)
+            stderr_file = Some(part[3..].to_string());
+            stderr_append = true;
+            i += 1;
+            continue;
         } else if part.starts_with(">") && !part.starts_with("2>") {
             // Handle cases like >file (no space)
             stdout_file = Some(part[1..].to_string());
+            stdout_append = false;
             i += 1;
             continue;
         } else if part.starts_with("1>") {
             // Handle cases like 1>file (no space)
             stdout_file = Some(part[2..].to_string());
+            stdout_append = false;
             i += 1;
             continue;
         } else if part.starts_with("2>") {
             // Handle cases like 2>file (no space)
             stderr_file = Some(part[2..].to_string());
+            stderr_append = false;
             i += 1;
             continue;
         }
@@ -299,5 +376,5 @@ fn parse_redirection(parts: &[String]) -> (Vec<String>, Option<String>, Option<S
         i += 1;
     }
 
-    (cmd_parts, stdout_file, stderr_file)
+    (cmd_parts, stdout_file, stdout_append, stderr_file, stderr_append)
 }
