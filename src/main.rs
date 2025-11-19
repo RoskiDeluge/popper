@@ -31,12 +31,12 @@ fn main() {
         if input.starts_with("echo ") {
             let args_str = &input[5..]; // Skip "echo "
             let args = parse_arguments(args_str);
-            let (cmd_args, stdout_file, _stderr_file) = parse_redirection(&args);
+            let (cmd_args, stdout_file, stderr_file) = parse_redirection(&args);
 
             let output_text = cmd_args.join(" ");
 
             if let Some(file_path) = stdout_file {
-                // Redirect to file
+                // Redirect stdout to file
                 match File::create(&file_path) {
                     Ok(mut file) => {
                         writeln!(file, "{}", output_text).ok();
@@ -49,6 +49,12 @@ fn main() {
                 // Print to stdout
                 println!("{}", output_text);
             }
+
+            // Create stderr file even if empty (echo doesn't write to stderr)
+            if let Some(file_path) = stderr_file {
+                File::create(&file_path).ok();
+            }
+
             continue;
         }
 
