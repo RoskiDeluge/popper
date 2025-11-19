@@ -233,9 +233,26 @@ fn main() {
             continue;
         }
 
-        if input == "history" {
-            for (index, cmd) in command_history.iter().enumerate() {
-                println!("{:5}  {}", index + 1, cmd);
+        if input == "history" || input.starts_with("history ") {
+            let limit = if input == "history" {
+                None
+            } else {
+                let n_str = &input[8..]; // Skip "history "
+                n_str.parse::<usize>().ok()
+            };
+
+            let entries_to_show = if let Some(n) = limit {
+                // Show last n entries
+                let start_index = command_history.len().saturating_sub(n);
+                &command_history[start_index..]
+            } else {
+                // Show all entries
+                &command_history[..]
+            };
+
+            let start_number = command_history.len() - entries_to_show.len() + 1;
+            for (index, cmd) in entries_to_show.iter().enumerate() {
+                println!("{:5}  {}", start_number + index, cmd);
             }
             continue;
         }
