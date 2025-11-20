@@ -6,7 +6,6 @@ use rustyline::validate::Validator;
 use rustyline::{CompletionType, Config, Context, Editor, Helper};
 use std::env;
 use std::fs::File;
-#[allow(unused_imports)]
 use std::io::{self, BufRead, BufReader, Write};
 use std::os::unix::fs::PermissionsExt;
 use std::os::unix::process::CommandExt;
