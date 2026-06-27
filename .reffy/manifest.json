@@ -378,17 +378,6 @@
       ]
     },
     {
-      "id": "c1acd47d-67b1-4dd9-b031-c8611b7c6be2",
-      "name": "lasm scm",
-      "filename": "lasm-scm.md",
-      "kind": "note",
-      "mime_type": "text/markdown",
-      "size_bytes": 9953,
-      "tags": [],
-      "created_at": "2026-06-10T07:09:29.936Z",
-      "updated_at": "2026-06-13T20:18:21.249Z"
-    },
-    {
       "id": "c4148ad7-c3c4-4f65-991d-727246955ea8",
       "name": "scm",
       "filename": "scm.pdf",
@@ -405,7 +394,7 @@
       "filename": "lasm-whitepaper.md",
       "kind": "note",
       "mime_type": "text/markdown",
-      "size_bytes": 34634,
+      "size_bytes": 34633,
       "tags": [],
       "created_at": "2026-06-27T08:38:33.246Z",
       "updated_at": "2026-06-27T08:38:33.246Z"

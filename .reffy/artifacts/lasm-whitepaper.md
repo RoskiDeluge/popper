@@ -1,4 +1,4 @@
-# Logical Assemblies as Load-Bearing Representations
+# LogicalAssemblies as Load-Bearing Representations
 
 ## Domain Knowledge Retention Under Entropy in Agentic Systems
 
