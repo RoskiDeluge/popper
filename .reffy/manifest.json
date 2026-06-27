@@ -1,8 +1,8 @@
 {
   "version": 1,
   "created_at": "2026-03-08T19:28:48.864Z",
-  "updated_at": "2026-06-12T07:32:32.450Z",
-  "project_id": "pppr",
+  "updated_at": "2026-06-27T08:38:33.247Z",
+  "project_id": "popper",
   "workspace_ids": [
     "nuveris-v1"
   ],
@@ -231,7 +231,7 @@
       "size_bytes": 4259,
       "tags": [],
       "created_at": "2026-04-12T21:55:05.779Z",
-      "updated_at": "2026-04-28T01:05:23.417Z",
+      "updated_at": "2026-05-21T20:07:37.281Z",
       "related_changes": [
         "deprecate-host-neutral-mvp-direction",
         "document-pppr-protocol-spec",
@@ -261,7 +261,7 @@
       "size_bytes": 3877,
       "tags": [],
       "created_at": "2026-04-17T23:38:16.452Z",
-      "updated_at": "2026-04-28T01:05:23.417Z",
+      "updated_at": "2026-05-21T20:07:37.281Z",
       "related_changes": [
         "deprecate-host-neutral-mvp-direction",
         "document-pppr-protocol-spec",
@@ -291,7 +291,7 @@
       "size_bytes": 2472,
       "tags": [],
       "created_at": "2026-04-27T20:50:07.018Z",
-      "updated_at": "2026-05-19T03:03:34.093Z",
+      "updated_at": "2026-05-21T20:07:37.281Z",
       "related_changes": [
         "deprecate-host-neutral-mvp-direction",
         "document-pppr-protocol-spec",
@@ -326,7 +326,7 @@
       "size_bytes": 7582,
       "tags": [],
       "created_at": "2026-04-27T22:19:47.519Z",
-      "updated_at": "2026-04-28T01:05:23.417Z",
+      "updated_at": "2026-05-21T20:07:37.281Z",
       "related_changes": [
         "deprecate-host-neutral-mvp-direction",
         "document-pppr-protocol-spec",
@@ -356,7 +356,7 @@
       "size_bytes": 9250,
       "tags": [],
       "created_at": "2026-04-27T23:10:05.647Z",
-      "updated_at": "2026-05-19T03:03:34.093Z",
+      "updated_at": "2026-05-21T20:07:37.281Z",
       "related_changes": [
         "document-pppr-protocol-spec",
         "version-pppr-snapshots",
@@ -386,7 +386,7 @@
       "size_bytes": 9953,
       "tags": [],
       "created_at": "2026-06-10T07:09:29.936Z",
-      "updated_at": "2026-06-10T07:09:29.936Z"
+      "updated_at": "2026-06-13T20:18:21.249Z"
     },
     {
       "id": "c4148ad7-c3c4-4f65-991d-727246955ea8",
@@ -397,7 +397,18 @@
       "size_bytes": 116037,
       "tags": [],
       "created_at": "2026-06-12T07:32:32.450Z",
-      "updated_at": "2026-06-12T07:32:32.450Z"
+      "updated_at": "2026-06-13T20:18:21.254Z"
+    },
+    {
+      "id": "14369a5d-b0bb-4e96-825e-1d32d539d359",
+      "name": "lasm whitepaper",
+      "filename": "lasm-whitepaper.md",
+      "kind": "note",
+      "mime_type": "text/markdown",
+      "size_bytes": 34634,
+      "tags": [],
+      "created_at": "2026-06-27T08:38:33.246Z",
+      "updated_at": "2026-06-27T08:38:33.246Z"
     }
   ]
 }
