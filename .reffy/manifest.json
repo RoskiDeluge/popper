@@ -1,7 +1,7 @@
 {
   "version": 1,
   "created_at": "2026-03-08T19:28:48.864Z",
-  "updated_at": "2026-06-27T08:38:33.247Z",
+  "updated_at": "2026-07-08T01:25:54.774Z",
   "project_id": "popper",
   "workspace_ids": [
     "nuveris-v1"
@@ -397,7 +397,51 @@
       "size_bytes": 34633,
       "tags": [],
       "created_at": "2026-06-27T08:38:33.246Z",
-      "updated_at": "2026-06-27T08:38:33.246Z"
+      "updated_at": "2026-06-27T08:46:55.202Z"
+    },
+    {
+      "id": "a1888265-e335-433f-ad2f-c0d58f13131b",
+      "name": "agents_x86_64_moment",
+      "filename": "agents_x86_64_moment.md",
+      "kind": "note",
+      "mime_type": "text/markdown",
+      "size_bytes": 11670,
+      "tags": [],
+      "created_at": "2026-07-04T21:41:56.381Z",
+      "updated_at": "2026-07-07T08:40:08.268Z"
+    },
+    {
+      "id": "f6bbeea2-e374-4209-ad9e-2265832c3398",
+      "name": "reffy_remote_binary_artifact_corruption",
+      "filename": "reffy_remote_binary_artifact_corruption.md",
+      "kind": "note",
+      "mime_type": "text/markdown",
+      "size_bytes": 4057,
+      "tags": [],
+      "created_at": "2026-07-07T20:32:17.513Z",
+      "updated_at": "2026-07-07T20:32:17.513Z"
+    },
+    {
+      "id": "346ab0f0-2dee-4d23-9610-43b663d11738",
+      "name": "skillopt_and_the_agent_isa",
+      "filename": "skillopt_and_the_agent_isa.md",
+      "kind": "note",
+      "mime_type": "text/markdown",
+      "size_bytes": 10857,
+      "tags": [],
+      "created_at": "2026-07-07T20:34:50.483Z",
+      "updated_at": "2026-07-08T01:05:56.843Z"
+    },
+    {
+      "id": "185b745d-c17a-4bf9-b97e-197feaadd751",
+      "name": "popper_roadmap_proposal_1",
+      "filename": "popper_roadmap_proposal_1.md",
+      "kind": "note",
+      "mime_type": "text/markdown",
+      "size_bytes": 9072,
+      "tags": [],
+      "created_at": "2026-07-08T01:16:46.241Z",
+      "updated_at": "2026-07-08T01:25:45.774Z"
     }
   ]
 }
