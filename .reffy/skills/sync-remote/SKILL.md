@@ -1,9 +1,11 @@
 ---
 name: sync-remote
-description: Publish and inspect the local .reffy/ workspace on a Paseo-backed remote.
-triggers: ["remote sync", "push workspace", "paseo", "remote status"]
-commands: ["reffy remote init", "reffy remote status", "reffy remote push", "reffy remote snapshot"]
-managed: true
+description: Link, inspect, and publish a Reffy remote workspace backed by Paseo. Use for remote sync, remote status, remote workspace inspection, shared references, or requests to push a workspace, publish references, or synchronize shared context.
+compatibility: Requires the Reffy CLI and an initialized Reffy workspace.
+metadata:
+  reffy-managed: "true"
+  reffy-commands: '["reffy remote init","reffy remote status","reffy remote push","reffy remote snapshot"]'
+  reffy-triggers: '["remote sync","remote workspace","push workspace","publish workspace","paseo","remote status","shared references","publish references"]'
 ---
 
 ## When to use this skill
@@ -12,6 +14,13 @@ Use this to link, publish, or inspect the shared remote workspace projection.
 ## Required environment
 - `PASEO_ENDPOINT` — the Paseo endpoint URL (never persisted).
 - `PASEO_TOKEN` — the bearer token (never persisted by the CLI).
+- `PASEO_PROVISIONING_TOKEN` — the deployment provisioning credential, needed
+  only for `reffy remote init --provision` when it creates a manager actor. Held
+  by the Paseo operator; never persisted by the CLI and never a substitute for
+  `PASEO_TOKEN`.
+- `PASEO_APPLICATION_OWNER` — optional owner recorded in the application
+  descriptor sent by `init --provision` (`--owner` wins; falls back to
+  `git config user.email`).
 
 Provide them either by exporting them in your shell or by placing them in a
 `.env` file at the repo root — every `reffy remote` command auto-loads `.env`
@@ -24,6 +33,7 @@ precedence over `.env`.
 3. `reffy remote status` to confirm linkage and identity.
 4. `reffy remote push` to import the full local `.reffy/` tree.
 5. `reffy remote snapshot` / `ls` / `cat` to inspect the remote projection.
+6. `reffy remote application get` / `set [--name] [--description] [--owner]` to inspect or describe the manager's Paseo application.
 
 ## Failure modes
 - A missing token makes the stored identifiers in `.reffy/state/remote.json` inert — set `PASEO_TOKEN`.

@@ -1,5 +1,24 @@
 # Project Context
 
+## Current product direction
+
+The user has pivoted pppr to a minimal, representative terminal testing rig for
+other agentic tools. The active application is the root `src/` directory, using
+published Pi packages. Pi owns harness behavior; pppr selects explicit extensions
+and skills and supplies plain shell I/O. It has no custom IR or host protocol.
+
+`simplify-to-terminal-harness` records this decision and its implementation.
+Earlier specs and the baseline below describe the previous product direction;
+they do not constrain the terminal rig. The old `packages/` tree has been deleted;
+its source remains in Git history. The decision and working baseline are captured
+in `.reffy/artifacts/pppr-terminal-testing-rig-pivot.md`.
+
+Development uses npm, Node.js 22+, strict TypeScript, and Vitest. Do not extend
+the former runtime/adapter architecture when adding a tool experiment. Prefer
+an ordinary Pi extension, skill, or shell command.
+
+## Previous product context (historical)
+
 ## Purpose
 
 For planning purposes, `pppr` is the evolving **intermediate representation layer** for agentic work. It is not the enclosing harness, not a host bridge, and not a product surface defined by one CLI. The core planning identity comes from `.reffy/reffyspec/specs/pppr-ir-core/spec.md`.
