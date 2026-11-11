@@ -64,6 +64,8 @@ separate cleanup candidates and are not application entrypoints.
   preference for small tool surfaces, shell composition, and observable state.
 - [Inherited Pi surface audit](pppr_pi_surface_audit.md) records the earlier
   package inventory; its IR-centered recommendations are historical.
-- [Terminal harness change](../reffyspec/changes/simplify-to-terminal-harness/proposal.md)
+- [Terminal harness change](../reffyspec/changes/archive/2026-11-11-simplify-to-terminal-harness/proposal.md)
   records implementation scope and the architecture pivot.
+- [Terminal rig specification](../reffyspec/specs/terminal-rig/spec.md) contains
+  the merged requirements for the working application.
 - [Current usage](../../README.md) describes the working application.

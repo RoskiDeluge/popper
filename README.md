@@ -87,6 +87,6 @@ scripts such as `pi-test.sh` describe the former workspace and are not entrypoin
 for this rig. The pivot is documented in the Reffy artifact
 [pppr terminal testing rig pivot](.reffy/artifacts/pppr-terminal-testing-rig-pivot.md)
 and the implementation change
-[simplify-to-terminal-harness](.reffy/reffyspec/changes/simplify-to-terminal-harness/proposal.md).
+[simplify-to-terminal-harness](.reffy/reffyspec/changes/archive/2026-11-11-simplify-to-terminal-harness/proposal.md).
 
 MIT. Pi is by Mario Zechner; see [LICENSE](LICENSE).
