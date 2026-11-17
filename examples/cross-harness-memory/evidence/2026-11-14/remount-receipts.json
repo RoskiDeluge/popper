@@ -1,0 +1,121 @@
+{
+  "actor": "popper-memory/popper-memory-c6f30422",
+  "repo": "paseo-ghengine-org/paseo-popper-memory-c6f30422-primary",
+  "before": {
+    "skill": {
+      "skill": {
+        "name": "harness-memory",
+        "repo_alias": "primary",
+        "path": "skills/harness-memory",
+        "owner": "paseo-ghengine-org",
+        "repo": "paseo-popper-memory-c6f30422-primary",
+        "commit_sha": "91905c6d80300d5407d6825ae946124bf19c50a8",
+        "scripts": [
+          "memory"
+        ],
+        "allowed_tools": [
+          "ghengine_read",
+          "ghengine_write"
+        ]
+      },
+      "loop": {
+        "max_steps": 6,
+        "notes": "off"
+      }
+    },
+    "state": {
+      "state": {
+        "ghengine": {
+          "repo_url": "https://github.com/paseo-ghengine-org/paseo-popper-memory-c6f30422-primary",
+          "owner": "paseo-ghengine-org",
+          "repo": "paseo-popper-memory-c6f30422-primary",
+          "working_branch": "paseo/session-81fd0032",
+          "default_branch": "main"
+        },
+        "r2": null,
+        "workspace": null,
+        "harness": {
+          "endpoint": "https://paseo-core.paseo.workers.dev/agents"
+        },
+        "last_invocation": {
+          "trace_id": "v2r1-1eb3a05c:popper:budgetcheck:q:attempt-1",
+          "status": "succeeded",
+          "started_at": 1794718016
+        }
+      }
+    },
+    "working_head": "877b8f1890e3d66a1a706e8f4ab7d95367df982b"
+  },
+  "process": {
+    "exit": 0,
+    "stdout": "{\n  \"skill\": {\n    \"name\": \"harness-memory\",\n    \"repo_alias\": \"primary\",\n    \"path\": \"skills/harness-memory\",\n    \"owner\": \"paseo-ghengine-org\",\n    \"repo\": \"paseo-popper-memory-c6f30422-primary\",\n    \"commit_sha\": \"4bb48cef979942a8d030f837ab087c6f8a477ae9\",\n    \"scripts\": [\n      \"memory\"\n    ],\n    \"allowed_tools\": [\n      \"ghengine_read\",\n      \"ghengine_write\"\n    ]\n  },\n  \"repo\": {\n    \"owner\": \"paseo-ghengine-org\",\n    \"repo\": \"paseo-popper-memory-c6f30422-primary\",\n    \"branch\": \"main\"\n  }\n}\n",
+    "stderr": "",
+    "duration_seconds": 5.109
+  },
+  "after": {
+    "skill": {
+      "skill": {
+        "name": "harness-memory",
+        "repo_alias": "primary",
+        "path": "skills/harness-memory",
+        "owner": "paseo-ghengine-org",
+        "repo": "paseo-popper-memory-c6f30422-primary",
+        "commit_sha": "4bb48cef979942a8d030f837ab087c6f8a477ae9",
+        "scripts": [
+          "memory"
+        ],
+        "allowed_tools": [
+          "ghengine_read",
+          "ghengine_write"
+        ]
+      },
+      "loop": {
+        "max_steps": 6,
+        "notes": "off"
+      }
+    },
+    "state": {
+      "state": {
+        "ghengine": {
+          "repo_url": "https://github.com/paseo-ghengine-org/paseo-popper-memory-c6f30422-primary",
+          "owner": "paseo-ghengine-org",
+          "repo": "paseo-popper-memory-c6f30422-primary",
+          "working_branch": "paseo/session-81fd0032",
+          "default_branch": "main"
+        },
+        "r2": null,
+        "workspace": null,
+        "harness": {
+          "endpoint": "https://paseo-core.paseo.workers.dev/agents"
+        },
+        "last_invocation": {
+          "trace_id": "v2r1-1eb3a05c:popper:budgetcheck:q:attempt-1",
+          "status": "succeeded",
+          "started_at": 1794718016
+        }
+      }
+    },
+    "working_head": "877b8f1890e3d66a1a706e8f4ab7d95367df982b"
+  },
+  "mounted_commit": "4bb48cef979942a8d030f837ab087c6f8a477ae9",
+  "files": {
+    "skills/harness-memory/SKILL.md": {
+      "exact_match": true,
+      "sha256": "553c1015b9d92d9ef4e304348eb71e27de511f86cc6f0bcb599e5d2209e4878b"
+    },
+    "skills/harness-memory/references/protocol.md": {
+      "exact_match": true,
+      "sha256": "7e122888d8cc594b7cb3e9ef124fd67611ab2b3aa2beef7d4fd6fdca48b3a3a6"
+    },
+    "skills/harness-memory/scripts/memory.js": {
+      "exact_match": true,
+      "sha256": "990d3b2104baa2b2fdd645dbcaebbca94227135dded7990c652f17fa000e5fa4"
+    }
+  },
+  "skill_tree_exact": true,
+  "journal_head_unchanged": true,
+  "effective_hints": {
+    "max_steps": 6,
+    "notes": "off"
+  }
+}

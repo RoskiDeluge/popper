@@ -1,0 +1,370 @@
+{
+  "status": "BLOCKED: no passing rotation",
+  "date": "2026-11-14 Pacific/Honolulu",
+  "setup": {
+    "workspace": "popper-memory",
+    "agent": "popper-memory-c6f30422",
+    "profile": "popper",
+    "repo": "paseo-ghengine-org/paseo-popper-memory-c6f30422-primary",
+    "working_branch": "paseo/session-81fd0032",
+    "skill_commit": "91905c6d80300d5407d6825ae946124bf19c50a8",
+    "image": "popper-memory-trial:c6f30422"
+  },
+  "runs": [
+    {
+      "label": "r1-a",
+      "summary": {
+        "label": "r1-a",
+        "harness": "codex",
+        "exit": 0,
+        "duration_seconds": 30.97,
+        "receipts": {
+          "receipt.json": {
+            "version": 1,
+            "agent": "popper-memory/popper-memory-c6f30422",
+            "repo": "paseo-ghengine-org/paseo-popper-memory-c6f30422-primary",
+            "branch": "paseo/session-81fd0032",
+            "attempt": 1,
+            "event_digest": "331ab781e9c95d1ab67b4cdf52dc7d85054706fd980d3a25d66301a9431db2f3",
+            "request_id": "r1-c6f30422:codex:a:a:attempt-1",
+            "outcome": "failed",
+            "reason": "Skill reported failure; matching record exists",
+            "duration_ms": 21624,
+            "evidence": {
+              "path": "journal/r1-c6f30422/codex/a/a.json",
+              "record": {
+                "schema_version": 1,
+                "kind": "journal",
+                "project": "r1-c6f30422",
+                "harness": "codex",
+                "session_id": "a",
+                "event_id": "a",
+                "content": "Calibration marker: quartz-7e59d128ab. Threshold = 17.",
+                "evidence_refs": [
+                  "fixture:r1-c6f30422"
+                ]
+              },
+              "commit_sha": "756529695aa03312597c4cb6a8bcd35f6621c650"
+            }
+          }
+        },
+        "stdout_bytes": 6295,
+        "stderr_bytes": 0
+      },
+      "event": {
+        "schema_version": 1,
+        "kind": "journal",
+        "project": "r1-c6f30422",
+        "harness": "codex",
+        "session_id": "a",
+        "event_id": "a",
+        "content": "Calibration marker: quartz-7e59d128ab. Threshold = 17.",
+        "evidence_refs": [
+          "fixture:r1-c6f30422"
+        ]
+      },
+      "participant_prompt": "You are a participant in an authorized synthetic cross-harness memory trial. Work only in /trial. Do not inspect credentials or other host context. Do not delegate, search the web, or modify the client. Use your shell tool to write the following EXACT event JSON to /trial/event.json, then execute the command below and inspect its exit status and receipt. Never invent success; if outcome is not verified, stop and report it. Do not retry, change request IDs, or reconcile automatically.\nEVENT: {\"schema_version\": 1, \"kind\": \"journal\", \"project\": \"r1-c6f30422\", \"harness\": \"codex\", \"session_id\": \"a\", \"event_id\": \"a\", \"content\": \"Calibration marker: quartz-7e59d128ab. Threshold = 17.\", \"evidence_refs\": [\"fixture:r1-c6f30422\"]}\nCOMMAND: node --import /opt/popper/node_modules/tsx/dist/loader.mjs /opt/popper/experiment/client.ts --agent popper-memory/popper-memory-c6f30422 --repo paseo-ghengine-org/paseo-popper-memory-c6f30422-primary --branch paseo/session-81fd0032 --event /trial/event.json --receipt /trial/receipt.json\nFinally report the verified record content and source paths/commits, or the failure. Leave the event and receipt JSON files in /trial. Do not make other remote calls.",
+      "original_invocation": {
+        "invocation": {
+          "trace_id": "r1-c6f30422:codex:a:a:attempt-1",
+          "action": "run",
+          "status": "succeeded",
+          "on_behalf_of": null,
+          "started_at": 1794716425,
+          "ended_at": 1794716443,
+          "result": {
+            "ok": true,
+            "data": {
+              "agentName": "popper-memory-c6f30422",
+              "agentInstanceId": "popper-memory-popper-memory-c6f30422-354f6c36",
+              "action": "run",
+              "invocations": 1,
+              "payload": {
+                "input": "{\"schema_version\":1,\"kind\":\"journal\",\"project\":\"r1-c6f30422\",\"harness\":\"codex\",\"session_id\":\"a\",\"event_id\":\"a\",\"content\":\"Calibration marker: quartz-7e59d128ab. Threshold = 17.\",\"evidence_refs\":[\"fixture:r1-c6f30422\"]}"
+              },
+              "response": "{\"error\":\"Invalid identity/version/kind\",\"kind\":\"journal\",\"project\":\"r1-c6f30422\"}",
+              "loop": {
+                "steps": [
+                  {
+                    "step": 1,
+                    "decision": "tool:skill.memory",
+                    "observation": "{\"generated_code\":\"async () => {\\n  const __paseo_skill_host = typeof skill !== \\\"undefined\\\" ? skill : null;\\n  const __paseo_skill = {\\n    read: (a) => __paseo_skill_host.read(a),\\n    list: (a) => __paseo_skill_host.list(a),\\n    \\\"memory\\\": (() => { /* Executed by Paseo inside its capability is"
+                  },
+                  {
+                    "step": 2,
+                    "decision": "tool:skill.memory",
+                    "observation": "error: mcp error: Invalid identity/version/kind"
+                  },
+                  {
+                    "step": 3,
+                    "decision": "final"
+                  }
+                ],
+                "memory_size": 0,
+                "notes": "off"
+              }
+            },
+            "trace_id": "r1-c6f30422:codex:a:a:attempt-1"
+          }
+        }
+      }
+    },
+    {
+      "label": "r1-b",
+      "summary": {
+        "label": "r1-b",
+        "harness": "claude-code",
+        "exit": 0,
+        "duration_seconds": 17.3,
+        "receipts": {
+          "receipt.json": {
+            "version": 1,
+            "agent": "popper-memory/popper-memory-c6f30422",
+            "repo": "paseo-ghengine-org/paseo-popper-memory-c6f30422-primary",
+            "branch": "paseo/session-81fd0032",
+            "attempt": 1,
+            "event_digest": "8c84c53f3bf1e5e1525d343365852306ed0712a404c4a721705cb55182a279b8",
+            "request_id": "r1-c6f30422:claude-code:b:q:attempt-1",
+            "outcome": "failed",
+            "reason": "Skill reported failure",
+            "duration_ms": 9476
+          }
+        },
+        "stdout_bytes": 14910,
+        "stderr_bytes": 0
+      },
+      "event": {
+        "schema_version": 1,
+        "kind": "briefing",
+        "project": "r1-c6f30422",
+        "harness": "claude-code",
+        "session_id": "b",
+        "event_id": "q",
+        "query": "Recall all findings for this project with source attribution and evidence."
+      },
+      "participant_prompt": "You are a participant in an authorized synthetic cross-harness memory trial. Work only in /trial. Do not inspect credentials or other host context. Do not delegate, search the web, or modify the client. Use your shell tool to write the following EXACT event JSON to /trial/event.json, then execute the command below and inspect its exit status and receipt. Never invent success; if outcome is not verified, stop and report it. Do not retry, change request IDs, or reconcile automatically.\nEVENT: {\"schema_version\": 1, \"kind\": \"briefing\", \"project\": \"r1-c6f30422\", \"harness\": \"claude-code\", \"session_id\": \"b\", \"event_id\": \"q\", \"query\": \"Recall all findings for this project with source attribution and evidence.\"}\nCOMMAND: node --import /opt/popper/node_modules/tsx/dist/loader.mjs /opt/popper/experiment/client.ts --agent popper-memory/popper-memory-c6f30422 --repo paseo-ghengine-org/paseo-popper-memory-c6f30422-primary --branch paseo/session-81fd0032 --event /trial/event.json --receipt /trial/receipt.json\nOnly after a verified briefing containing exactly one record, write a follow-up event to /trial/followup.json using this shape: {\"schema_version\": 1, \"kind\": \"journal\", \"project\": \"r1-c6f30422\", \"harness\": \"claude-code\", \"session_id\": \"b\", \"event_id\": \"b\", \"content\": \"REPLACE_WITH_RECALLED_FINDING_PLUS_CONFIRMED\", \"evidence_refs\": [\"fixture:r1-c6f30422\"], \"parent\": {\"harness\": \"codex\", \"session_id\": \"a\", \"event_id\": \"a\"}}. Replace content with the retrieved record content followed by \" Confirmed.\" (under 240 characters). Keep all other fields exact. Execute: node --import /opt/popper/node_modules/tsx/dist/loader.mjs /opt/popper/experiment/client.ts --agent popper-memory/popper-memory-c6f30422 --repo paseo-ghengine-org/paseo-popper-memory-c6f30422-primary --branch paseo/session-81fd0032 --event /trial/followup.json --receipt /trial/followup-receipt.json\nFinally report the verified record content and source paths/commits, or the failure. Leave the event and receipt JSON files in /trial. Do not make other remote calls.",
+      "original_invocation": {
+        "invocation": {
+          "trace_id": "r1-c6f30422:claude-code:b:q:attempt-1",
+          "action": "run",
+          "status": "succeeded",
+          "on_behalf_of": null,
+          "started_at": 1794716482,
+          "ended_at": 1794716491,
+          "result": {
+            "ok": true,
+            "data": {
+              "agentName": "popper-memory-c6f30422",
+              "agentInstanceId": "popper-memory-popper-memory-c6f30422-354f6c36",
+              "action": "run",
+              "invocations": 2,
+              "payload": {
+                "input": "{\"schema_version\":1,\"kind\":\"briefing\",\"project\":\"r1-c6f30422\",\"harness\":\"claude-code\",\"session_id\":\"b\",\"event_id\":\"q\",\"query\":\"Recall all findings for this project with source attribution and evidence.\"}"
+              },
+              "response": "{\"error\":\"Invalid identity/version/kind\",\"kind\":\"briefing\",\"project\":\"r1-c6f30422\"}",
+              "loop": {
+                "steps": [
+                  {
+                    "step": 1,
+                    "decision": "tool:skill.memory",
+                    "observation": "{\"generated_code\":\"async () => {\\n  const __paseo_skill_host = typeof skill !== \\\"undefined\\\" ? skill : null;\\n  const __paseo_skill = {\\n    read: (a) => __paseo_skill_host.read(a),\\n    list: (a) => __paseo_skill_host.list(a),\\n    \\\"memory\\\": (() => { /* Executed by Paseo inside its capability is"
+                  },
+                  {
+                    "step": 2,
+                    "decision": "tool:skill.memory",
+                    "observation": "error: mcp error: Invalid identity/version/kind"
+                  },
+                  {
+                    "step": 3,
+                    "decision": "final"
+                  }
+                ],
+                "memory_size": 0,
+                "notes": "off"
+              }
+            },
+            "trace_id": "r1-c6f30422:claude-code:b:q:attempt-1"
+          }
+        }
+      }
+    },
+    {
+      "label": "r1-c",
+      "summary": {
+        "label": "r1-c",
+        "harness": "popper",
+        "exit": 0,
+        "duration_seconds": 14.26,
+        "receipts": {
+          "receipt.json": {
+            "version": 1,
+            "agent": "popper-memory/popper-memory-c6f30422",
+            "repo": "paseo-ghengine-org/paseo-popper-memory-c6f30422-primary",
+            "branch": "paseo/session-81fd0032",
+            "attempt": 1,
+            "event_digest": "2097710737b88ba7a25481951c2c804cf6c97c84f8471688f1b52606d121cea1",
+            "request_id": "r1-c6f30422:popper:c:q:attempt-1",
+            "outcome": "failed",
+            "reason": "Skill reported failure",
+            "duration_ms": 9482
+          }
+        },
+        "stdout_bytes": 107948,
+        "stderr_bytes": 0
+      },
+      "event": {
+        "schema_version": 1,
+        "kind": "briefing",
+        "project": "r1-c6f30422",
+        "harness": "popper",
+        "session_id": "c",
+        "event_id": "q",
+        "query": "Recall all findings for this project with source attribution and evidence."
+      },
+      "participant_prompt": "You are a participant in an authorized synthetic cross-harness memory trial. Work only in /trial. Do not inspect credentials or other host context. Do not delegate, search the web, or modify the client. Use your shell tool to write the following EXACT event JSON to /trial/event.json, then execute the command below and inspect its exit status and receipt. Never invent success; if outcome is not verified, stop and report it. Do not retry, change request IDs, or reconcile automatically.\nEVENT: {\"schema_version\": 1, \"kind\": \"briefing\", \"project\": \"r1-c6f30422\", \"harness\": \"popper\", \"session_id\": \"c\", \"event_id\": \"q\", \"query\": \"Recall all findings for this project with source attribution and evidence.\"}\nCOMMAND: node --import /opt/popper/node_modules/tsx/dist/loader.mjs /opt/popper/experiment/client.ts --agent popper-memory/popper-memory-c6f30422 --repo paseo-ghengine-org/paseo-popper-memory-c6f30422-primary --branch paseo/session-81fd0032 --event /trial/event.json --receipt /trial/receipt.json\nFinally report the verified record content and source paths/commits, or the failure. Leave the event and receipt JSON files in /trial. Do not make other remote calls.",
+      "original_invocation": {
+        "invocation": {
+          "trace_id": "r1-c6f30422:popper:c:q:attempt-1",
+          "action": "run",
+          "status": "succeeded",
+          "on_behalf_of": null,
+          "started_at": 1794716525,
+          "ended_at": 1794716534,
+          "result": {
+            "ok": true,
+            "data": {
+              "agentName": "popper-memory-c6f30422",
+              "agentInstanceId": "popper-memory-popper-memory-c6f30422-354f6c36",
+              "action": "run",
+              "invocations": 3,
+              "payload": {
+                "input": "{\"schema_version\":1,\"kind\":\"briefing\",\"project\":\"r1-c6f30422\",\"harness\":\"popper\",\"session_id\":\"c\",\"event_id\":\"q\",\"query\":\"Recall all findings for this project with source attribution and evidence.\"}"
+              },
+              "response": "{\"error\":\"Invalid identity/version/kind\",\"kind\":\"briefing\",\"project\":\"r1-c6f30422\"}",
+              "loop": {
+                "steps": [
+                  {
+                    "step": 1,
+                    "decision": "tool:skill.memory",
+                    "observation": "{\"generated_code\":\"async () => {\\n  const __paseo_skill_host = typeof skill !== \\\"undefined\\\" ? skill : null;\\n  const __paseo_skill = {\\n    read: (a) => __paseo_skill_host.read(a),\\n    list: (a) => __paseo_skill_host.list(a),\\n    \\\"memory\\\": (() => { /* Executed by Paseo inside its capability is"
+                  },
+                  {
+                    "step": 2,
+                    "decision": "tool:skill.memory",
+                    "observation": "error: mcp error: Invalid identity/version/kind"
+                  },
+                  {
+                    "step": 3,
+                    "decision": "final"
+                  }
+                ],
+                "memory_size": 0,
+                "notes": "off"
+              }
+            },
+            "trace_id": "r1-c6f30422:popper:c:q:attempt-1"
+          }
+        }
+      }
+    }
+  ],
+  "duplicate": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "POST https://paseo-core.paseo.workers.dev/pods/784cd249-cead-4966-a13a-631ed20f204d/actors/70816e88-bbc0-4124-a82a-fe0ab25a9add/workspaces/popper-memory/agents/popper-memory-c6f30422/invoke \u2192 409 Conflict {\"error\":\"invocation_exists\",\"message\":\"an invocation with this request_id has already been recorded\",\"trace_id\":\"r1-c6f30422:codex:a:a:attempt-1\"}\n"
+  },
+  "reconciled_failed_receipt": {
+    "version": 1,
+    "agent": "popper-memory/popper-memory-c6f30422",
+    "repo": "paseo-ghengine-org/paseo-popper-memory-c6f30422-primary",
+    "branch": "paseo/session-81fd0032",
+    "attempt": 1,
+    "event_digest": "331ab781e9c95d1ab67b4cdf52dc7d85054706fd980d3a25d66301a9431db2f3",
+    "request_id": "r1-c6f30422:codex:a:a:attempt-1",
+    "outcome": "failed",
+    "reason": "Skill reported failure; matching record exists",
+    "duration_ms": 0,
+    "evidence": {
+      "path": "journal/r1-c6f30422/codex/a/a.json",
+      "record": {
+        "schema_version": 1,
+        "kind": "journal",
+        "project": "r1-c6f30422",
+        "harness": "codex",
+        "session_id": "a",
+        "event_id": "a",
+        "content": "Calibration marker: quartz-7e59d128ab. Threshold = 17.",
+        "evidence_refs": [
+          "fixture:r1-c6f30422"
+        ]
+      },
+      "commit_sha": "756529695aa03312597c4cb6a8bcd35f6621c650"
+    }
+  },
+  "independent_github": {
+    "record": {
+      "schema_version": 1,
+      "kind": "journal",
+      "project": "r1-c6f30422",
+      "harness": "codex",
+      "session_id": "a",
+      "event_id": "a",
+      "content": "Calibration marker: quartz-7e59d128ab. Threshold = 17.",
+      "evidence_refs": [
+        "fixture:r1-c6f30422"
+      ]
+    },
+    "exact_match": true,
+    "commit": "756529695aa03312597c4cb6a8bcd35f6621c650",
+    "branch_comparison": "identical"
+  },
+  "transport": {
+    "event": {
+      "schema_version": 1,
+      "kind": "briefing",
+      "project": "transport-c6f30422",
+      "harness": "codex",
+      "session_id": "operator",
+      "event_id": "q",
+      "query": "Synthetic unavailable transport test."
+    },
+    "receipt": {
+      "version": 1,
+      "agent": "popper-memory/popper-memory-c6f30422",
+      "repo": "paseo-ghengine-org/paseo-popper-memory-c6f30422-primary",
+      "branch": "paseo/session-81fd0032",
+      "attempt": 1,
+      "event_digest": "265f46c412eae43495756c20807c70332b6da1aeeb32b0ce09aeb96b7f7f04ce",
+      "request_id": "transport-c6f30422:codex:operator:q:attempt-1",
+      "outcome": "unknown",
+      "reason": "Evidence lookup unavailable",
+      "duration_ms": 73
+    },
+    "process": {
+      "exit": 1,
+      "stdout": "{\n  \"version\": 1,\n  \"agent\": \"popper-memory/popper-memory-c6f30422\",\n  \"repo\": \"paseo-ghengine-org/paseo-popper-memory-c6f30422-primary\",\n  \"branch\": \"paseo/session-81fd0032\",\n  \"attempt\": 1,\n  \"event_digest\": \"265f46c412eae43495756c20807c70332b6da1aeeb32b0ce09aeb96b7f7f04ce\",\n  \"request_id\": \"transport-c6f30422:codex:operator:q:attempt-1\",\n  \"outcome\": \"unknown\",\n  \"reason\": \"Evidence lookup unavailable\",\n  \"duration_ms\": 73\n}\n",
+      "stderr": ""
+    }
+  },
+  "source_revision": "598111628db2440a727a308438c01c945e977728",
+  "script_bytes": 5167,
+  "isolation": {
+    "fresh_container_per_harness": true,
+    "root_filesystem": "read-only",
+    "capabilities": "all dropped",
+    "security_opt": "no-new-privileges",
+    "tmpfs": [
+      "/trial",
+      "/home/node",
+      "/tmp"
+    ],
+    "mounts": "Only individual runtime credential files; no host workspace, home, transcript, fixture, evidence or Docker socket",
+    "reader_marker_assertion": "Expected marker absent from both reader prompts",
+    "image_contains": "Clean runtime source, dependencies, client and CLIs; built before trial prompts"
+  },
+  "participant_commands": {
+    "codex": "codex exec --skip-git-repo-check --ephemeral --ignore-user-config --ignore-rules --dangerously-bypass-approvals-and-sandbox --json -",
+    "claude-code": "claude --print --safe-mode --setting-sources \"\" --strict-mcp-config --mcp-config '{\"mcpServers\":{}}' --no-session-persistence --permission-mode dontAsk --allowedTools Bash,Read,Write --tools Bash,Read,Write --output-format stream-json --verbose",
+    "popper": "node --import /opt/popper/node_modules/tsx/dist/loader.mjs /opt/popper/src/cli.ts --cwd /trial --agent-dir /trial/pi --no-session --tools read,bash,write --model openai/gpt-4o --json"
+  }
+}

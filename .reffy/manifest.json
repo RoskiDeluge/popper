@@ -1,7 +1,7 @@
 {
   "version": 1,
   "created_at": "2026-03-08T19:28:48.864Z",
-  "updated_at": "2026-11-15T02:54:59.454Z",
+  "updated_at": "2026-11-15T05:15:01.323Z",
   "project_id": "popper",
   "workspace_ids": [
     "nuveris-v1",
@@ -483,6 +483,61 @@
         ".reffy/reffyspec/changes/prove-cross-harness-memory/design.md",
         ".reffy/reffyspec/changes/prove-cross-harness-memory/specs/prove-cross-harness-memory/spec.md"
       ]
+    },
+    {
+      "id": "7a972155-80a0-42ee-b652-70a259d8a44f",
+      "name": "popper memory live preflight",
+      "filename": "popper-memory-live-preflight.md",
+      "kind": "note",
+      "mime_type": "text/markdown",
+      "size_bytes": 3097,
+      "tags": [],
+      "created_at": "2026-11-15T04:11:31.732Z",
+      "updated_at": "2026-11-15T04:23:55.272Z"
+    },
+    {
+      "id": "73fd88b4-9b04-4428-bd0c-d976137f6f69",
+      "name": "popper memory live results",
+      "filename": "popper-memory-live-results.md",
+      "kind": "note",
+      "mime_type": "text/markdown",
+      "size_bytes": 8495,
+      "tags": [],
+      "created_at": "2026-11-15T04:24:10.160Z",
+      "updated_at": "2026-11-15T04:58:12.349Z"
+    },
+    {
+      "id": "b641b93d-8d67-4e8a-a428-e02983c7bf36",
+      "name": "popper memory result delivery rerun",
+      "filename": "popper-memory-result-delivery-rerun.md",
+      "kind": "note",
+      "mime_type": "text/markdown",
+      "size_bytes": 9492,
+      "tags": [],
+      "created_at": "2026-11-15T04:39:46.480Z",
+      "updated_at": "2026-11-15T04:58:12.069Z"
+    },
+    {
+      "id": "30fbaefe-2e9e-445f-b504-3cd315e07e73",
+      "name": "popper memory live acceptance",
+      "filename": "popper-memory-live-acceptance.md",
+      "kind": "note",
+      "mime_type": "text/markdown",
+      "size_bytes": 10291,
+      "tags": [],
+      "created_at": "2026-11-15T04:58:12.760Z",
+      "updated_at": "2026-11-15T05:15:00.840Z"
+    },
+    {
+      "id": "5672fe70-dac5-4966-84f7-f3be93484779",
+      "name": "popper memory remount verified",
+      "filename": "popper-memory-remount-verified.md",
+      "kind": "note",
+      "mime_type": "text/markdown",
+      "size_bytes": 2166,
+      "tags": [],
+      "created_at": "2026-11-15T05:15:01.323Z",
+      "updated_at": "2026-11-15T05:15:01.323Z"
     }
   ]
 }

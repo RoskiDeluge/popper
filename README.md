@@ -59,6 +59,10 @@ project instructions and configuration, so use `--cwd` and `--agent-dir` to
 control the experiment's environment. Extensions requiring Pi's full-screen UI
 are outside this rig's scope. Arbitrary extension CLI flags are not forwarded.
 
+The [cross-harness memory experiment](examples/cross-harness-memory/README.md)
+provides a Paseo journal/briefing skill, explicit client, and runbook for testing
+shared memory across Codex, Claude Code, and Popper.
+
 ## Sessions
 
 Pi transcripts are saved under `~/.pppr/agent/sessions`. Use `--continue` to resume

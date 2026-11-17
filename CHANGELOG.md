@@ -10,6 +10,9 @@
 
 ### Added
 
+- An explicit cross-harness Paseo memory experiment with an attributed journal
+  skill, GitHub-verified client, retry receipts, offline checks, and live runbook.
+
 - Plain interactive input, one-shot and piped prompts, and native Pi JSONL events.
 - Explicit Pi extensions and skills, selectable built-in tools, Pi session
   continuation, and ephemeral runs.

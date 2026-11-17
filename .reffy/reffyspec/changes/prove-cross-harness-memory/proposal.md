@@ -45,6 +45,9 @@ source identity, concurrent-write safety, or a general memory service.
   when explicitly requested, following repository instructions.
 - The existing `terminal-rig` spec remains the implementation boundary: ordinary
   shell calls and explicit Pi resources.
+- Paseo's `popper_loop_hints_live.md` handoff reports the required loop hints,
+  script capability binding, and longer runtime bounds deployed. Live preflight
+  must confirm notes off, memory_size zero, and grants on our selected actor.
 
 ## Reffy References
 
@@ -56,3 +59,14 @@ source identity, concurrent-write safety, or a general memory service.
   workspace `nuveris-v1` - input/action corrections, GitHub memory storage,
   invocation receipts, and deduplication limits. Retrieve with:
   `reffy remote cat .reffy/artifacts/popper_cross_harness_experiment_reply.md --workspace-id nuveris-v1 --project-id paseo-core`.
+
+- Remote `paseo-core:popper_loop_hints_live.md`, dated 2026-11-15, workspace
+  `nuveris-v1` - deployment handoff, script capability fix, timeout bounds, and
+  required per-invocation notes/memory_size isolation checks.
+
+- Remote `paseo-core:popper_result_delivery_fix.md` and
+  `paseo-core:popper_final_answer_budget_fix.md`, dated 2026-11-15, workspace
+  `nuveris-v1` - deployed result extraction, generation budget and structured
+  final-output fixes required by our measured diagnostics.
+- `popper-memory-live-acceptance.md` - final three-rotation and scope/failure
+  evidence, including the recovered writer and preserved earlier failures.
