@@ -1,7 +1,7 @@
 {
   "version": 1,
   "created_at": "2026-03-08T19:28:48.864Z",
-  "updated_at": "2026-11-17T01:21:24.692Z",
+  "updated_at": "2026-11-19T00:44:46.798Z",
   "project_id": "popper",
   "workspace_ids": [
     "nuveris-v1",
@@ -549,6 +549,17 @@
       "tags": [],
       "created_at": "2026-11-17T01:21:24.691Z",
       "updated_at": "2026-11-17T01:21:24.691Z"
+    },
+    {
+      "id": "1e0725ce-7c09-40a9-8331-03488351c624",
+      "name": "from observer calibration to agent jurisdiction",
+      "filename": "from-observer-calibration-to-agent-jurisdiction.md",
+      "kind": "note",
+      "mime_type": "text/markdown",
+      "size_bytes": 7027,
+      "tags": [],
+      "created_at": "2026-11-19T00:44:46.797Z",
+      "updated_at": "2026-11-19T00:44:46.797Z"
     }
   ]
 }
